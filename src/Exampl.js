@@ -10,7 +10,10 @@ function App({ hideSourceOnDrag }) {
     a: { top: 0, left: 0, title: "A" },
     b: { top: 0, left: 50, title: "B" },
   });
-  console.log("🚀 ~ file: Exampl.js ~ line 16 ~ App ~ boxes", boxes["b"]);
+  const [coordinates, setCoordinates] = useState({
+    a: { x: 0, y: 0 },
+    b: { x: 0, y: 0 },
+  });
   const moveBox = useCallback(
     (id, left, top) => {
       setBoxes(
@@ -28,10 +31,16 @@ function App({ hideSourceOnDrag }) {
       accept: ItemTypes.KNIGHT,
       drop(item, monitor) {
         const delta = monitor.getDifferenceFromInitialOffset();
-        console.log("🚀 ~ file: Exampl.js ~ line 34 ~ drop ~ delta", delta);
         const left = Math.round(item.left + delta.x);
         const top = Math.round(item.top + delta.y);
         moveBox(item.id, left, top);
+        setCoordinates({
+          ...coordinates,
+          [item.id]: {
+            x: delta.x,
+            y: delta.y,
+          },
+        });
         return undefined;
       },
     }),
